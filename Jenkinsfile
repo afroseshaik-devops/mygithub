@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'master',
-                    url: 'https://github.com/<your-username>/<your-repo>.git'
+                    url: 'https://github.com/afroseshaik-devops/mygithub.git'
             }
         }
 
@@ -19,16 +19,7 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
-
-        stage('Run JAR') {
-            steps {
-                // Stop previous running app (optional)
-                sh 'pkill -f "*.jar" || true'
-
-                sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
-            }
-        }
-    }
+     }
 
     post {
         success {
