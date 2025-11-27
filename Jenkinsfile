@@ -55,19 +55,26 @@ pipeline {
         }
 
         stage('Deploy to EC2') {
-            steps {
-                sh """
-                    ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DEPLOY_SERVER '
-                        aws ecr get-login-password --region ap-south-1 \
-                        | docker login --username AWS --password-stdin $ECR_REPO &&
-                        docker pull $ECR_REPO:$IMAGE_TAG &&
-                        docker stop app || true &&
-                        docker rm app || true &&
-                        docker run -d --name app -p 8080:8080 $ECR_REPO:$IMAGE_TAG
-                    '
-                """
-            }
-        }
+    steps {
+        sh """
+            ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DEPLOY_SERVER << 'EOF'
+                # Login to ECR (IAM role supplies creds)
+                aws ecr get-login-password --region ap-south-1 | \
+                docker login --username AWS --password-stdin $ECR_REPO
+
+                # Pull latest image
+                docker pull $ECR_REPO:$IMAGE_TAG
+
+                # Stop and remove any old container
+                docker stop app || true
+                docker rm app || true
+
+                # Run new container
+                docker run -d --name app -p 8080:8080 $ECR_REPO:$IMAGE_TAG
+            EOF
+        """
+    }
+}
     }
 
     post {
