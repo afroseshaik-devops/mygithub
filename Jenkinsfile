@@ -57,6 +57,7 @@ pipeline {
         /* FIXED APPROVAL STAGE */
         stage('Approve Deploy') {
             agent none
+            tools { }
             steps {
                 script {
                     timeout(time: 15, unit: 'MINUTES') {
