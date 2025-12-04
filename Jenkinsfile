@@ -32,41 +32,45 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh """
-                    docker build -t my-wildfly-app .
-                """
+                sh 'docker build -t my-wildfly-app .'
             }
         }
 
         stage('Login to ECR') {
             steps {
-                sh """
+                sh '''
                     aws ecr get-login-password --region $AWS_REGION \
                     | docker login --username AWS --password-stdin $ECR_REPO
-                """
+                '''
             }
         }
 
         stage('Push to ECR') {
             steps {
-                sh """
+                sh '''
                     docker tag my-wildfly-app:latest $ECR_REPO:$IMAGE_TAG
                     docker push $ECR_REPO:$IMAGE_TAG
-                """
+                '''
             }
         }
 
+        /*
+         * IMPORTANT FIX:
+         * This approval stage must NOT inherit tool(step) wrappers,
+         * so we use agent none here.
+         */
         stage('Approve Deploy') {
-           
+            agent none
             steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input message: "Deploy to EC2?"
+                script {
+                    timeout(time: 15, unit: 'MINUTES') {
+                        input message: "Deploy to EC2?"
+                    }
                 }
             }
         }
 
         stage('Deploy to EC2') {
-            
             steps {
                 sh """
 ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DEPLOY_SERVER << 'EOF'
