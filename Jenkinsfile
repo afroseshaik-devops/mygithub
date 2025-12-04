@@ -22,7 +22,7 @@ pipeline {
             }
         }
 
-        stage('Build JAR') {
+        stage('Build WAR') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
@@ -31,7 +31,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh """
-                    docker build -t my-spring-app .
+                    docker build -t my-wildfly-app .
                 """
             }
         }
@@ -48,7 +48,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 sh """
-                    docker tag my-spring-app:latest $ECR_REPO:$IMAGE_TAG
+                    docker tag my-wildfly-app:latest $ECR_REPO:$IMAGE_TAG
                     docker push $ECR_REPO:$IMAGE_TAG
                 """
             }
