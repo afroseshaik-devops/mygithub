@@ -26,6 +26,7 @@ pipeline {
         stage('Build WAR') {
             steps {
                 sh 'mvn clean package -DskipTests'
+                sh 'mv target/*.war target/demo.war'
             }
         }
 
