@@ -38,27 +38,23 @@ pipeline {
 
         stage('Login to ECR') {
             steps {
-                sh '''
+                sh """
                     aws ecr get-login-password --region $AWS_REGION \
                     | docker login --username AWS --password-stdin $ECR_REPO
-                '''
+                """
             }
         }
 
         stage('Push to ECR') {
             steps {
-                sh '''
+                sh """
                     docker tag my-wildfly-app:latest $ECR_REPO:$IMAGE_TAG
                     docker push $ECR_REPO:$IMAGE_TAG
-                '''
+                """
             }
         }
 
-        /*
-         * IMPORTANT FIX:
-         * This approval stage must NOT inherit tool(step) wrappers,
-         * so we use agent none here.
-         */
+        /* FIXED APPROVAL STAGE */
         stage('Approve Deploy') {
             agent none
             steps {
