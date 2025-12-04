@@ -36,11 +36,12 @@
 
         <!-- Jakarta EE API (WildFly provides implementation) -->
         <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>10.0.0</version>
-            <scope>provided</scope>
-        </dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>9.1.0</version>
+    <scope>provided</scope>
+</dependency>
+
 
         <!-- Testing -->
         <dependency>
