@@ -15,10 +15,11 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/afroseshaik-devops/mygithub.git'
+                checkout scm
+                echo "Building branch: ${env.GIT_BRANCH}"
             }
         }
 
@@ -54,9 +55,23 @@ pipeline {
             }
         }
 
+        stage('Approve Deploy') {
+            when {
+                branch 'master'   // Only deploy master/main (optional)
+            }
+            steps {
+                timeout(time: 15, unit: 'MINUTES') {
+                    input message: "Deploy to EC2?"
+                }
+            }
+        }
+
         stage('Deploy to EC2') {
-    steps {
-        sh """
+            when {
+                branch 'master'
+            }
+            steps {
+                sh """
 ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DEPLOY_SERVER << 'EOF'
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REPO
 
@@ -68,9 +83,8 @@ docker rm app || true
 docker run -d --name app -p 8080:8080 $ECR_REPO:$IMAGE_TAG
 EOF
 """
-    }
-}
-
+            }
+        }
     }
 
     post {
