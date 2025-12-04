@@ -56,9 +56,7 @@ pipeline {
         }
 
         stage('Approve Deploy') {
-            when {
-                branch 'master'   // Only deploy master/main (optional)
-            }
+           
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
                     input message: "Deploy to EC2?"
@@ -67,9 +65,7 @@ pipeline {
         }
 
         stage('Deploy to EC2') {
-            when {
-                branch 'master'
-            }
+            
             steps {
                 sh """
 ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DEPLOY_SERVER << 'EOF'
