@@ -54,18 +54,7 @@ pipeline {
             }
         }
 
-        /* FIXED APPROVAL STAGE */
-        stage('Approve Deploy') {
-            agent none
-            tools { }
-            steps {
-                script {
-                    timeout(time: 15, unit: 'MINUTES') {
-                        input message: "Deploy to EC2?"
-                    }
-                }
-            }
-        }
+     
 
         stage('Deploy to EC2') {
             steps {
