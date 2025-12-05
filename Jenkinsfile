@@ -10,7 +10,7 @@ pipeline {
         AWS_REGION = 'ap-south-1'
         ECR_REPO = '339713053602.dkr.ecr.ap-south-1.amazonaws.com/my-spring-app'
         IMAGE_TAG = "latest"
-        DEPLOY_SERVER = "ec2-user@13.233.152.32"
+        DEPLOY_SERVER = "ec2-user@13.127.249.33"
         KEY_PATH = "/var/lib/jenkins/.ssh/jenkins-key.pem"
     }
 
