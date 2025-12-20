@@ -36,12 +36,6 @@ variable "chart_path" {
   default     = "../helm/my-spring-app"
 }
 
-variable "values_file" {
-  description = "Path to the values file template"
-  type        = string
-  default     = "values.yaml.tpl"
-}
-
 # Application Image Configuration
 variable "image_repository" {
   description = "Docker image repository"

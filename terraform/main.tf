@@ -31,20 +31,6 @@ resource "helm_release" "my_spring_app" {
   namespace        = var.namespace
   create_namespace = var.create_namespace
 
-  values = [
-    templatefile("${path.module}/${var.values_file}", {
-      image_repository = var.image_repository
-      image_tag        = var.image_tag
-      replica_count    = var.replica_count
-      service_type     = var.service_type
-      service_port     = var.service_port
-      cpu_limit        = var.cpu_limit
-      memory_limit     = var.memory_limit
-      cpu_request      = var.cpu_request
-      memory_request   = var.memory_request
-    })
-  ]
-
   set {
     name  = "image.repository"
     value = var.image_repository
@@ -135,6 +121,4 @@ resource "helm_release" "my_spring_app" {
 
   timeout = 600
   wait    = true
-
-  depends_on = []
 }
