@@ -1,6 +1,6 @@
 terraform {
   required_version = ">= 1.0"
-  
+
   required_providers {
     helm = {
       source  = "hashicorp/helm"
@@ -30,7 +30,7 @@ resource "helm_release" "my_spring_app" {
   chart            = var.chart_path
   namespace        = var.namespace
   create_namespace = var.create_namespace
-  
+
   values = [
     templatefile("${path.module}/${var.values_file}", {
       image_repository = var.image_repository
