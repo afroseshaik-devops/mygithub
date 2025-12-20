@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: demo
+  repository: spring-boot-demo
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -83,8 +83,8 @@ readinessProbe:
   httpGet:
     path: /
     port: http
-  initialDelaySeconds: 30
-  periodSeconds: 10
+  initialDelaySeconds: 10
+  periodSeconds: 5
 
 autoscaling:
   enabled: false

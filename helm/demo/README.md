@@ -31,7 +31,7 @@ The following table lists the configurable parameters of the Demo chart and thei
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `replicaCount` | Number of replicas | `1` |
-| `image.repository` | Image repository | `demo` |
+| `image.repository` | Image repository | `spring-boot-demo` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `image.tag` | Image tag | `""` (defaults to chart appVersion) |
 | `service.type` | Kubernetes service type | `ClusterIP` |
@@ -66,13 +66,13 @@ Before deploying with Helm, build and push your Docker image:
 ./mvnw clean package
 
 # Build the Docker image
-docker build -t your-registry/demo:0.0.1-SNAPSHOT .
+docker build -t your-registry/spring-boot-demo:0.0.1-SNAPSHOT .
 
 # Push to registry
-docker push your-registry/demo:0.0.1-SNAPSHOT
+docker push your-registry/spring-boot-demo:0.0.1-SNAPSHOT
 
 # Install with custom image
-helm install my-demo ./helm/demo --set image.repository=your-registry/demo --set image.tag=0.0.1-SNAPSHOT
+helm install my-demo ./helm/demo --set image.repository=your-registry/spring-boot-demo --set image.tag=0.0.1-SNAPSHOT
 ```
 
 ## Accessing the Application
