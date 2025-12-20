@@ -1,0 +1,37 @@
+# Example terraform.tfvars file
+# Copy this file to terraform.tfvars and update with your values
+
+# Kubernetes Configuration
+# kubeconfig_path = "~/.kube/config"
+# kube_context    = "my-cluster-context"
+
+# Helm Release Configuration
+release_name      = "my-spring-app"
+namespace         = "production"
+create_namespace  = true
+
+# Application Image Configuration
+image_repository = "339713053602.dkr.ecr.ap-south-1.amazonaws.com/my-spring-app"
+image_tag        = "latest"
+
+# Deployment Configuration
+replica_count = 3
+
+# Service Configuration
+service_type = "LoadBalancer"
+service_port = 80
+
+# Resource Configuration
+cpu_limit      = "500m"
+memory_limit   = "512Mi"
+cpu_request    = "250m"
+memory_request = "256Mi"
+
+# Ingress Configuration (optional)
+enable_ingress = false
+# ingress_host   = "my-spring-app.example.com"
+
+# Autoscaling Configuration (optional)
+enable_autoscaling       = false
+# autoscaling_min_replicas = 2
+# autoscaling_max_replicas = 10
