@@ -5,12 +5,14 @@
 replicaCount: 1
 
 image:
-  repository: spring-boot-demo
-  pullPolicy: IfNotPresent
+  repository: 339713053602.dkr.ecr.ap-south-1.amazonaws.com/my-spring-app
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
 
-imagePullSecrets: []
+# AWS ECR requires authentication - use this for ECR image pull
+imagePullSecrets:
+  - name: ecr-registry-secret
 nameOverride: ""
 fullnameOverride: ""
 

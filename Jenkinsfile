@@ -9,9 +9,10 @@ pipeline {
     environment {
         AWS_REGION = 'ap-south-1'
         ECR_REPO = '339713053602.dkr.ecr.ap-south-1.amazonaws.com/my-spring-app'
-        IMAGE_TAG = "latest"
-        DEPLOY_SERVER = "ec2-user@3.109.210.15"
-        KEY_PATH = "/var/lib/jenkins/.ssh/jenkins-key.pem"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
+        HELM_RELEASE_NAME = "my-spring-app"
+        HELM_NAMESPACE = "default"
     }
 
     stages {
@@ -54,22 +55,30 @@ pipeline {
             }
         }
 
-        stage('Deploy to EC2') {
-    steps {
-        sh """
-ssh -o StrictHostKeyChecking=no -i $KEY_PATH $DEPLOY_SERVER << 'EOF'
-aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REPO
-
-docker pull $ECR_REPO:$IMAGE_TAG
-
-docker stop app || true
-docker rm app || true
-
-docker run -d --name app -p 8080:8080 $ECR_REPO:$IMAGE_TAG
-EOF
-"""
-    }
-}
+        stage('Deploy to Kubernetes with Helm') {
+            steps {
+                script {
+                    sh """
+                        # Ensure Helm is installed
+                        helm version
+                        
+                        # Deploy or upgrade the application using Helm
+                        helm upgrade --install ${HELM_RELEASE_NAME} ./helm/demo \
+                            --namespace ${HELM_NAMESPACE} \
+                            --create-namespace \
+                            --set image.repository=${ECR_REPO} \
+                            --set image.tag=${IMAGE_TAG} \
+                            --set image.pullPolicy=Always \
+                            --wait \
+                            --timeout 5m
+                        
+                        # Display deployment status
+                        kubectl get pods -n ${HELM_NAMESPACE} -l app.kubernetes.io/name=demo
+                        kubectl get svc -n ${HELM_NAMESPACE} -l app.kubernetes.io/name=demo
+                    """
+                }
+            }
+        }
 
     }
 
