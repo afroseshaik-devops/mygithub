@@ -1,9 +1,13 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM quay.io/wildfly/wildfly:latest
 
-WORKDIR /app
+# Copy WAR file to WildFly deployments folder
+COPY target/demo.war /opt/jboss/wildfly/standalone/deployments/demo.war
 
-COPY target/*.jar app.jar
+# Add .dodeploy marker so WildFly auto-deploys the WAR
+RUN touch /opt/jboss/wildfly/standalone/deployments/demo.war.dodeploy
 
+# WildFly exposes 8080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Start WildFly
+ENTRYPOINT ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0"]
