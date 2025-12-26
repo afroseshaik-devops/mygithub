@@ -18,7 +18,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master',
+                git branch: 'rancher-integration',
                     url: 'https://github.com/afroseshaik-devops/mygithub.git'
             }
         }
